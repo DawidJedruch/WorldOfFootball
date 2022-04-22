@@ -8,6 +8,9 @@
         public int Age { get; set; }
         public string Position { get; set; }
         public string Nationality { get; set; }
+        public int Price { get; set; }
 
+        public int FootballClubId { get; set; }
+        public virtual FootballClub FootballClub { get; set;}
     }
 }
