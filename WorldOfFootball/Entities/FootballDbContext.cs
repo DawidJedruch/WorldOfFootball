@@ -4,7 +4,7 @@ namespace WorldOfFootball.Entities
 {
     public class FootballDbContext : DbContext
     {
-        private string _connectionString = "Server=localhost\\SQLEXPRESS01;Database=master;Trusted_Connection=True;";
+        private string _connectionString = "Server=localhost\\SQLEXPRESS01;Database=WorldOfFootball;Trusted_Connection=True;";
         public DbSet<FootballClub> FootballClubs { get; set; }
         public DbSet<Footballer> Footballers { get; set;}
 
