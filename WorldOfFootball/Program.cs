@@ -1,3 +1,7 @@
+using Microsoft.EntityFrameworkCore;
+using WorldOfFootball;
+using WorldOfFootball.Entities;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -5,7 +9,15 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddDbContext<FootballDbContext>();
+builder.Services.AddScoped<FootballSeeder>();
+
 var app = builder.Build();
+
+var scope = app.Services.CreateScope();
+var seeder = scope.ServiceProvider.GetRequiredService<FootballSeeder>();
+
+seeder.Seed();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

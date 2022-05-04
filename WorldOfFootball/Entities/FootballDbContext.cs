@@ -17,7 +17,7 @@ namespace WorldOfFootball.Entities
 
             modelBuilder.Entity<Footballer>()
                 .Property(x => x.LastName)
-                .IsRequired(); 
+                .IsRequired();
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
