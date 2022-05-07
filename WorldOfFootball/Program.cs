@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 using WorldOfFootball;
 using WorldOfFootball.Entities;
 
@@ -11,13 +12,14 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<FootballDbContext>();
 builder.Services.AddScoped<FootballSeeder>();
+builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
 var app = builder.Build();
 
 var scope = app.Services.CreateScope();
 var seeder = scope.ServiceProvider.GetRequiredService<FootballSeeder>();
 
-seeder.Seed();
+//seeder.Seed();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
