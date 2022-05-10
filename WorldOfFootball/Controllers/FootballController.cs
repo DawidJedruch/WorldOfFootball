@@ -6,7 +6,7 @@ using WorldOfFootball.Models;
 namespace WorldOfFootball.Controllers
 {
     [Route("api/footballClubs")]
-    public class FootballController : ControllerBase
+    public class FootballController : Controller
     {
         private readonly FootballDbContext _dbcontext;
         private readonly IMapper _mapper;
@@ -15,6 +15,16 @@ namespace WorldOfFootball.Controllers
         {
             _dbcontext = dbContext;
             _mapper = mapper;
+        }
+
+        [HttpPost]
+        public ActionResult CreateFootballClub([FromBody]CreateFootballClubDto dto)
+        {
+            var footballClub = _mapper.Map<FootballClub>(dto);
+            _dbcontext.FootballClubs.Add(footballClub);
+            _dbcontext.SaveChanges();
+
+            return Created($"/api/footballClub/{footballClub.Id}", null);
         }
 
         [HttpGet]
