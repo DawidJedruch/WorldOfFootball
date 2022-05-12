@@ -2,19 +2,18 @@
 using Microsoft.AspNetCore.Mvc;
 using WorldOfFootball.Entities;
 using WorldOfFootball.Models;
+using WorldOfFootball.Services;
 
 namespace WorldOfFootball.Controllers
 {
     [Route("api/footballClubs")]
     public class FootballController : ControllerBase
     {
-        private readonly FootballDbContext _dbcontext;
-        private readonly IMapper _mapper;
+        private readonly IFootballClubService _footballClubService;
 
-        public FootballController(FootballDbContext dbContext, IMapper mapper)
+        public FootballController(IFootballClubService footballClubService)
         {
-            _dbcontext = dbContext;
-            _mapper = mapper;
+            _footballClubService = footballClubService;
         }
 
         [HttpPost]
@@ -24,21 +23,16 @@ namespace WorldOfFootball.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var footballClub = _mapper.Map<FootballClub>(dto);
-            _dbcontext.FootballClubs.Add(footballClub);
-            _dbcontext.SaveChanges();
+            
+            var id = _footballClubService.Create(dto);
 
-            return Created($"/api/footballClub/{footballClub.Id}", null);
+            return Created($"/api/footballClub/{id}", null);
         }
 
         [HttpGet]
         public ActionResult<IEnumerable<FootballClubDto>> GetAll()
         {
-            var footballClubs = _dbcontext
-                .FootballClubs
-                .ToList();
-
-            var footballClubDtos = _mapper.Map<List<FootballClubDto>>(footballClubs);
+            var footballClubDtos = _footballClubService.GetAll();
 
             return Ok(footballClubDtos);
         }
@@ -46,18 +40,14 @@ namespace WorldOfFootball.Controllers
         [HttpGet("{id}")]
         public ActionResult<FootballClubDto> Get([FromRoute] int id)
         {
-            var footballClub = _dbcontext
-                .FootballClubs
-                .FirstOrDefault(r => r.Id == id);
-
+            var footballClub = _footballClubService.GetById(id);
+            
             if(footballClub is null)
             {
                 return NotFound();
             }
 
-            var footballClubDtos = _mapper.Map<List<FootballClubDto>>(footballClub);
-
-            return Ok(footballClubDtos);
+            return Ok(footballClub);
         }
     }
 }

@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 using WorldOfFootball;
 using WorldOfFootball.Entities;
+using WorldOfFootball.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +14,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<FootballDbContext>();
 builder.Services.AddScoped<FootballSeeder>();
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
+builder.Services.AddScoped<IFootballClubService, FootballClubService>();
 
 var app = builder.Build();
 
