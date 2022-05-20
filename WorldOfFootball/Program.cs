@@ -26,13 +26,15 @@ var seeder = scope.ServiceProvider.GetRequiredService<FootballSeeder>();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    //app.UseSwagger();
+    //.UseSwaggerUI();
 
     app.UseDeveloperExceptionPage();
 }
 
 app.UseHttpsRedirection();
+
+//app.MapControllers();
 
 /*
 var summaries = new[]

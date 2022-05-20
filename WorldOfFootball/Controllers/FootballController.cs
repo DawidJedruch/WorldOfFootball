@@ -7,6 +7,7 @@ using WorldOfFootball.Services;
 namespace WorldOfFootball.Controllers
 {
     [Route("api/footballClubs")]
+    [ApiController]
     public class FootballController : ControllerBase
     {
         private readonly IFootballClubService _footballClubService;
@@ -14,6 +15,19 @@ namespace WorldOfFootball.Controllers
         public FootballController(IFootballClubService footballClubService)
         {
             _footballClubService = footballClubService;
+        }
+
+        [HttpDelete("{id}")]
+        public ActionResult Delete([FromRoute] int id)
+        {
+            var isDeleted = _footballClubService.Delete(id);
+
+            if (isDeleted)
+            {
+                return NoContent();
+            }
+
+            return NotFound();
         }
 
         [HttpPost]
