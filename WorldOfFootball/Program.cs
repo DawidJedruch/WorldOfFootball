@@ -8,6 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -26,25 +27,27 @@ var seeder = scope.ServiceProvider.GetRequiredService<FootballSeeder>();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    //app.UseSwagger();
-    //.UseSwaggerUI();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 
     app.UseDeveloperExceptionPage();
 }
 
 app.UseHttpsRedirection();
 
-//app.MapControllers();
+app.UseAuthorization();
 
-/*
+app.MapControllers();
+
+
 var summaries = new[]
 {
     "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
 };
 
-*/
 
-/*app.MapGet("/weatherforecast", () =>
+
+app.MapGet("/weatherforecast", () =>
 {
     var forecast = Enumerable.Range(1, 5).Select(index =>
        new WeatherForecast
@@ -57,13 +60,11 @@ var summaries = new[]
     return forecast;
 })
 .WithName("GetWeatherForecast");
-*/
 
 app.Run();
 
-/*
+
 internal record WeatherForecast(DateTime Date, int TemperatureC, string? Summary)
 {
     public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
 }
-*/
