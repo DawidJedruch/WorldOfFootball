@@ -17,6 +17,23 @@ namespace WorldOfFootball.Controllers
             _footballClubService = footballClubService;
         }
 
+        [HttpPut("{id}")]
+        public ActionResult Update([FromBody] UpdateFootballClubDto dto, [FromRoute]int id)
+        {
+            if (ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var isUpdated = _footballClubService.Update(id, dto);
+            if (isUpdated)
+            {
+                return NotFound();
+            }
+
+            return Ok();
+        }
+
         [HttpDelete("{id}")]
         public ActionResult Delete([FromRoute] int id)
         {

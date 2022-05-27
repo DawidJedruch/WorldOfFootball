@@ -10,6 +10,7 @@ namespace WorldOfFootball.Services
         IEnumerable<FootballClubDto> GetAll();
         int Create(CreateFootballClubDto dto);
         bool Delete(int id);
+        bool Update(int id, UpdateFootballClubDto dto);
     }
 
     public class FootballClubService : IFootballClubService
@@ -21,6 +22,25 @@ namespace WorldOfFootball.Services
         {
             _dbContext = dbContext;
             _mapper = mapper;
+        }
+
+        public bool Update(int id, UpdateFootballClubDto dto)
+        {
+            var footballClub = _dbContext
+                .FootballClubs
+                .FirstOrDefault(r => r.Id == id);
+
+            if (footballClub is null) return false;
+
+            footballClub.Name = dto.Name;
+            footballClub.StadiumName = dto.StadiumName;
+            footballClub.City = dto.City;
+            footballClub.Nationality = dto.Nationality;
+            footballClub.Description = dto.Description;
+
+            _dbContext.SaveChanges();
+
+            return true;
         }
 
         public bool Delete(int id)
