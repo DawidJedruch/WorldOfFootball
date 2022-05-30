@@ -17,11 +17,13 @@ namespace WorldOfFootball.Services
     {
         private readonly FootballDbContext _dbContext;
         private readonly IMapper _mapper;
+        private readonly ILogger _logger;
 
-        public FootballClubService(FootballDbContext dbContext, IMapper mapper)
+        public FootballClubService(FootballDbContext dbContext, IMapper mapper, ILogger<FootballClubService> logger)
         {
             _dbContext = dbContext;
             _mapper = mapper;
+            _logger = logger;
         }
 
         public bool Update(int id, UpdateFootballClubDto dto)
@@ -45,6 +47,8 @@ namespace WorldOfFootball.Services
 
         public bool Delete(int id)
         {
+            _logger.LogError($"FootballClub with id: {id} DELETE action invoked.");
+
             var footballClub = _dbContext
                 .FootballClubs
                 .FirstOrDefault(r => r.Id == id);
