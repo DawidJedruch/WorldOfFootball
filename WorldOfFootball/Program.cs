@@ -4,6 +4,7 @@ using WorldOfFootball;
 using WorldOfFootball.Entities;
 using WorldOfFootball.Services;
 using NLog.Web;
+using WorldOfFootball.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,6 +24,7 @@ builder.Services.AddDbContext<FootballDbContext>();
 builder.Services.AddScoped<FootballSeeder>();
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 builder.Services.AddScoped<IFootballClubService, FootballClubService>();
+builder.Services.AddScoped<ErrorHandlingMiddleware>();
 
 var app = builder.Build();
 
@@ -40,6 +42,7 @@ if (app.Environment.IsDevelopment())
     app.UseDeveloperExceptionPage();
 }
 
+app.UseMiddleware<ErrorHandlingMiddleware>();
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
