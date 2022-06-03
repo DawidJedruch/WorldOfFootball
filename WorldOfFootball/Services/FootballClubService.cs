@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using WorldOfFootball.Entities;
+using WorldOfFootball.Exceptions;
 using WorldOfFootball.Models;
 
 namespace WorldOfFootball.Services
@@ -9,8 +10,8 @@ namespace WorldOfFootball.Services
         FootballClubDto GetById(int id);
         IEnumerable<FootballClubDto> GetAll();
         int Create(CreateFootballClubDto dto);
-        bool Delete(int id);
-        bool Update(int id, UpdateFootballClubDto dto);
+        void Delete(int id);
+        void Update(int id, UpdateFootballClubDto dto);
     }
 
     public class FootballClubService : IFootballClubService
@@ -26,13 +27,14 @@ namespace WorldOfFootball.Services
             _logger = logger;
         }
 
-        public bool Update(int id, UpdateFootballClubDto dto)
+        public void Update(int id, UpdateFootballClubDto dto)
         {
             var footballClub = _dbContext
                 .FootballClubs
                 .FirstOrDefault(r => r.Id == id);
 
-            if (footballClub is null) return false;
+            if (footballClub is null)
+                throw new NotFoundException("FootballClub not found.");
 
             footballClub.Name = dto.Name;
             footballClub.StadiumName = dto.StadiumName;
@@ -41,11 +43,9 @@ namespace WorldOfFootball.Services
             footballClub.Description = dto.Description;
 
             _dbContext.SaveChanges();
-
-            return true;
         }
 
-        public bool Delete(int id)
+        public void Delete(int id)
         {
             _logger.LogError($"FootballClub with id: {id} DELETE action invoked.");
 
@@ -53,12 +53,11 @@ namespace WorldOfFootball.Services
                 .FootballClubs
                 .FirstOrDefault(r => r.Id == id);
 
-            if (footballClub is null) return false;
+            if (footballClub is null)
+                throw new NotFoundException("Football Club not found.");
 
             _dbContext.FootballClubs.Remove(footballClub);
             _dbContext.SaveChanges();
-
-            return true;
         }
 
         public FootballClubDto GetById(int id)
@@ -68,9 +67,7 @@ namespace WorldOfFootball.Services
                 .FirstOrDefault(r => r.Id == id);
 
             if (footballClub is null)
-            {
-                return null;
-            }
+                throw new NotFoundException("Football Club not found.");
 
             var result = _mapper.Map<FootballClubDto>(footballClub);
             return result;

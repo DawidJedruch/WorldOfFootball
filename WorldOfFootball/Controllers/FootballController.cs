@@ -20,16 +20,7 @@ namespace WorldOfFootball.Controllers
         [HttpPut("{id}")]
         public ActionResult Update([FromBody] UpdateFootballClubDto dto, [FromRoute]int id)
         {
-            if (ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var isUpdated = _footballClubService.Update(id, dto);
-            if (isUpdated)
-            {
-                return NotFound();
-            }
+            _footballClubService.Update(id, dto);
 
             return Ok();
         }
@@ -37,24 +28,14 @@ namespace WorldOfFootball.Controllers
         [HttpDelete("{id}")]
         public ActionResult Delete([FromRoute] int id)
         {
-            var isDeleted = _footballClubService.Delete(id);
+            _footballClubService.Delete(id);
 
-            if (isDeleted)
-            {
-                return NoContent();
-            }
-
-            return NotFound();
+            return NoContent();
         }
 
         [HttpPost]
         public ActionResult CreateFootballClub([FromBody]CreateFootballClubDto dto)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-            
+        {           
             var id = _footballClubService.Create(dto);
 
             return Created($"/api/footballClub/{id}", null);
@@ -71,12 +52,7 @@ namespace WorldOfFootball.Controllers
         [HttpGet("{id}")]
         public ActionResult<FootballClubDto> Get([FromRoute] int id)
         {
-            var footballClub = _footballClubService.GetById(id);
-            
-            if(footballClub is null)
-            {
-                return NotFound();
-            }
+            var footballClub = _footballClubService.GetById(id);                     
 
             return Ok(footballClub);
         }
