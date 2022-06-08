@@ -13,6 +13,8 @@ namespace WorldOfFootball
             CreateMap<Footballer, FootballerDto>();
 
             CreateMap<CreateFootballClubDto, FootballClub>();
+
+            CreateMap<CreateFootballerDto, FootballerDto>();
         }
     }
 }

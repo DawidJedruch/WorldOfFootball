@@ -13,7 +13,7 @@ namespace WorldOfFootball.Entities
             modelBuilder.Entity<FootballClub>()
                 .Property(x => x.Name)
                 .IsRequired()
-                .HasMaxLength(30);
+                .HasMaxLength(25);
 
             modelBuilder.Entity<Footballer>()
                 .Property(x => x.LastName)

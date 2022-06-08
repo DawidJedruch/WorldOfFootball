@@ -6,7 +6,7 @@ using WorldOfFootball.Services;
 
 namespace WorldOfFootball.Controllers
 {
-    [Route("api/footballClubs")]
+    [Route("api/footballClub")]
     [ApiController]
     public class FootballController : ControllerBase
     {
