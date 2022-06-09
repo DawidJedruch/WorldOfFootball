@@ -19,7 +19,21 @@ namespace WorldOfFootball.Controllers
         {
             var newFootballerId = _footballerService.Create(footballClubId, dto);
 
-            return Created($"api/{footballClubId}/footballer/{newFootballerId}", null);
+            return Created($"api/footballClub/{footballClubId}/footballer/{newFootballerId}", null);
+        }
+
+        [HttpGet("{footballerId}")]
+        public ActionResult<FootballerDto> Get([FromRoute] int footballClubId, [FromRoute]int footballerId)
+        {
+            FootballerDto footballer = _footballerService.GetById(footballClubId, footballerId);
+            return Ok(footballer);
+        }
+
+        [HttpGet]
+        public ActionResult<FootballerDto> Get([FromRoute] int footballClubId)
+        {
+            var result = _footballerService.GetAll(footballClubId);
+            return Ok(result);
         }
     }
 }
