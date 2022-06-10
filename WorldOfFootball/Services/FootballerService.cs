@@ -13,6 +13,8 @@ namespace WorldOfFootball.Services
         FootballerDto GetById(int footballClubId, int footballerId);
 
         List<FootballerDto> GetAll(int footballClubId)
+
+        void RemoveAll(int footballClubId);
     }
 
     public class FootballerService : IFootballerService
@@ -27,9 +29,7 @@ namespace WorldOfFootball.Services
         }
         public int Create(int footballClubId, CreateFootballerDto dto)
         {
-            var footballClub = _context.FootballClubs.FirstOrDefault(f => f.Id == footballClubId);
-            if (footballClub is null)
-                throw new NotFoundException("FootballClub not found");
+            var footballClub = GetFootballClubById(footballClubId);
 
             var footballerEntity = _mapper.Map<Footballer>(dto);
 
@@ -43,9 +43,7 @@ namespace WorldOfFootball.Services
 
         public FootballerDto GetById(int footballClubId, int footballerId)
         {
-            var footballClub = _context.FootballClubs.FirstOrDefault(f => f.Id == footballClubId);
-            if (footballClub is null)
-                throw new NotFoundException("FootballClub not found");
+            var footballClub = GetFootballClubById(footballClubId);
 
             var footballer = _context.Footballers.FirstOrDefault(f => f.Id == footballerId);
             if (footballer is null || footballer.FootballClubId != footballClubId)
@@ -59,16 +57,32 @@ namespace WorldOfFootball.Services
 
         public List<FootballerDto> GetAll(int footballClubId)
         {
-            var footballClub = _context
-                .FootballClubs
-                .Include(f => f.Footballers)
-                .FirstOrDefault(f => f.Id == footballClubId);
-            if (footballClub is null)
-                throw new NotFoundException("FootballClub not found");
+            var footballClub = GetFootballClubById(footballClubId);
 
             var footballerDtos = _mapper.Map<List<FootballerDto>>(footballClub.Footballers);
 
             return footballerDtos;
+        }            
+
+        public void RemoveAll(int footballClubId)
+        {
+            var footballClub = GetFootballClubById(footballClubId);
+
+            _context.RemoveRange(footballClub.Footballers);
+            _context.SaveChanges();
+        }
+
+        private FootballClub GetFootballClubById(int footballClubId)
+        {
+            var footballClub = _context
+                .FootballClubs
+                .Include(f => f.Footballers)
+                .FirstOrDefault(f => f.Id == footballClubId);
+
+            if (footballClub is null)
+                throw new NotFoundException("FootballClub not found");
+
+            return footballClub;
         }
     }
 }

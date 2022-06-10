@@ -35,5 +35,13 @@ namespace WorldOfFootball.Controllers
             var result = _footballerService.GetAll(footballClubId);
             return Ok(result);
         }
+
+        [HttpDelete]
+        public ActionResult Delete([FromRoute]int footballerId)
+        {
+            _footballerService.RemoveAll(footballerId);
+
+            return NoContent();
+        }
     }
 }
