@@ -14,13 +14,41 @@ namespace WorldOfFootball
         {
             if(_dbContext.Database.CanConnect())
             {
-                if (_dbContext.FootballClubs.Any())
+                if (!_dbContext.Roles.Any())
+                {
+                    var roles = GetRoles();
+                    _dbContext.Roles.AddRange(roles);
+                    _dbContext.SaveChanges();
+                }
+
+                if (!_dbContext.FootballClubs.Any())
                 {
                     var footballClubs = GetFootballClubs();
                     _dbContext.FootballClubs.AddRange(footballClubs);
                     _dbContext.SaveChanges();
                 }
             }
+        }
+
+        private IEnumerable<Role> GetRoles()
+        {
+            var roles = new List<Role>()
+            {
+                new Role()
+                {
+                    Name = "User"
+                },
+                new Role()
+                {
+                    Name = "Player"
+                },
+                new Role()
+                {
+                    Name = "Admin"
+                }
+            };
+
+            return roles;
         }
 
         private IEnumerable<FootballClub> GetFootballClubs()

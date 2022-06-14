@@ -12,7 +12,7 @@ namespace WorldOfFootball.Services
 
         FootballerDto GetById(int footballClubId, int footballerId);
 
-        List<FootballerDto> GetAll(int footballClubId)
+        List<FootballerDto> GetAll(int footballClubId);
 
         void RemoveAll(int footballClubId);
     }
