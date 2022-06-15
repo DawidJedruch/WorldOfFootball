@@ -25,6 +25,7 @@ builder.Services.AddScoped<FootballSeeder>();
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 builder.Services.AddScoped<IFootballClubService, FootballClubService>();
 builder.Services.AddScoped<IFootballerService, FootballerService>();
+builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<ErrorHandlingMiddleware>();
 builder.Services.AddScoped<RequestTimeMiddleware>();
 
