@@ -1,4 +1,5 @@
-﻿using WorldOfFootball.Entities;
+﻿using Microsoft.AspNetCore.Identity;
+using WorldOfFootball.Entities;
 using WorldOfFootball.Models;
 
 namespace WorldOfFootball.Services
@@ -9,11 +10,14 @@ namespace WorldOfFootball.Services
     }
     public class AccountService : IAccountService
     {
-        private FootballDbContext _context;
+        private readonly FootballDbContext _context;
 
-        public AccountService(FootballDbContext context)
+        private readonly IPasswordHasher<User> _passwordHasher;
+
+        public AccountService(FootballDbContext context, IPasswordHasher<User> passwordHasher)
         {
             _context = context;
+            _passwordHasher = passwordHasher;
         }
         public void RegisterUser(RegisterUserDto dto)
         {
@@ -25,6 +29,9 @@ namespace WorldOfFootball.Services
                 RoleId = dto.RoleId
             };
 
+            var hashPassword = _passwordHasher.HashPassword(newUser, dto.Password);
+
+            newUser.PasswordHash = hashPassword;
             _context.Users.Add(newUser);
             _context.SaveChanges();
         }

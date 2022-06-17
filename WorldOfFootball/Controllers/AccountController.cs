@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using WorldOfFootball.Entities;
 using WorldOfFootball.Models;
 using WorldOfFootball.Services;
 
@@ -8,11 +10,12 @@ namespace WorldOfFootball.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
-        private IAccountService _accountService;
+        private readonly IAccountService _accountService;
 
         public AccountController(IAccountService accountService)
         {
             _accountService = accountService;
+            
         }
 
         [HttpPost("register")]
