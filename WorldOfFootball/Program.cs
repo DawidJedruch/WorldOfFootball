@@ -6,6 +6,10 @@ using WorldOfFootball.Services;
 using NLog.Web;
 using WorldOfFootball.Middleware;
 using Microsoft.AspNetCore.Identity;
+using FluentValidation;
+using WorldOfFootball.Models;
+using WorldOfFootball.Models.Validators;
+using FluentValidation.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +25,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddControllers().AddFluentValidation();
 builder.Services.AddDbContext<FootballDbContext>();
 builder.Services.AddScoped<FootballSeeder>();
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
@@ -30,6 +35,7 @@ builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<ErrorHandlingMiddleware>();
 builder.Services.AddScoped<RequestTimeMiddleware>();
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
+builder.Services.AddScoped<IValidator<RegisterUserDto>, RegisterUserDtoValidator>();
 
 var app = builder.Build();
 
