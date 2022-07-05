@@ -6,7 +6,7 @@ namespace WorldOfFootball.Controllers
 {
     [Route("api/footballClub/{footballClubId}/footballer")]
     [ApiController]
-    public class FootballerController : Controller
+    public class FootballerController : ControllerBase
     {
         private IFootballerService _footballerService;
 
