@@ -8,7 +8,7 @@ namespace WorldOfFootball.Services
     public interface IFootballClubService
     {
         FootballClubDto GetById(int id);
-        IEnumerable<FootballClubDto> GetAll(string ?searchPhrase);
+        IEnumerable<FootballClubDto> GetAll(FootballClubQuery query);
         int Create(CreateFootballClubDto dto);
         void Delete(int id);
         void Update(int id, UpdateFootballClubDto dto);
@@ -73,12 +73,14 @@ namespace WorldOfFootball.Services
             return result;
         }
 
-        public IEnumerable<FootballClubDto> GetAll(string ?searchPhrase)
+        public IEnumerable<FootballClubDto> GetAll(FootballClubQuery query)
         {
             var footballClubs = _dbContext
                 .FootballClubs
-                .Where(f => (searchPhrase == null) || (f.Name.ToLower().Contains(searchPhrase.ToLower()) 
-                    || f.Description.ToLower().Contains(searchPhrase.ToLower())))
+                .Where(f => (query.SearchPhrase == null) || (f.Name.ToLower().Contains(query.SearchPhrase.ToLower()) 
+                    || f.Description.ToLower().Contains(query.SearchPhrase.ToLower())))
+                .Skip(query.PageSize * (query.PageNumber - 1))
+                .Take(query.PageSize)
                 .ToList();
 
             var footballClubDtos = _mapper.Map<List<FootballClubDto>>(footballClubs);

@@ -42,9 +42,9 @@ namespace WorldOfFootball.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<FootballClubDto>> GetAll([FromQuery]string ?searchPhrase)
+        public ActionResult<IEnumerable<FootballClubDto>> GetAll([FromQuery]FootballClubQuery query)
         {
-            var footballClubDtos = _footballClubService.GetAll(searchPhrase);
+            var footballClubDtos = _footballClubService.GetAll(query);
 
             return Ok(footballClubDtos);
         }
