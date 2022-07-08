@@ -8,7 +8,7 @@ namespace WorldOfFootball.Services
     public interface IFootballClubService
     {
         FootballClubDto GetById(int id);
-        IEnumerable<FootballClubDto> GetAll(FootballClubQuery query);
+        PageResult<FootballClubDto> GetAll(FootballClubQuery query);
         int Create(CreateFootballClubDto dto);
         void Delete(int id);
         void Update(int id, UpdateFootballClubDto dto);
@@ -73,19 +73,25 @@ namespace WorldOfFootball.Services
             return result;
         }
 
-        public IEnumerable<FootballClubDto> GetAll(FootballClubQuery query)
+        public PageResult<FootballClubDto> GetAll(FootballClubQuery query)
         {
-            var footballClubs = _dbContext
+            var baseQuery = _dbContext
                 .FootballClubs
-                .Where(f => (query.SearchPhrase == null) || (f.Name.ToLower().Contains(query.SearchPhrase.ToLower()) 
-                    || f.Description.ToLower().Contains(query.SearchPhrase.ToLower())))
+                .Where(f => (query.SearchPhrase == null) || (f.Name.ToLower().Contains(query.SearchPhrase.ToLower())
+                    || f.Description.ToLower().Contains(query.SearchPhrase.ToLower())));
+
+            var footballClubs = baseQuery
                 .Skip(query.PageSize * (query.PageNumber - 1))
                 .Take(query.PageSize)
                 .ToList();
 
+            var totalItemsCount = baseQuery.Count();
+
             var footballClubDtos = _mapper.Map<List<FootballClubDto>>(footballClubs);
 
-            return footballClubDtos;
+            var result = new PageResult<FootballClubDto>(footballClubDtos, totalItemsCount, query.PageSize, query.PageNumber);
+
+            return result;
         }
 
         public int Create(CreateFootballClubDto dto)
