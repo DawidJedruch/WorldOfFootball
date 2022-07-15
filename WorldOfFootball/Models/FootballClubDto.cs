@@ -9,6 +9,6 @@
         public string Nationality { get; set; }
         public string Description { get; set; }
 
-        public List<FootballerDto> Footballers { get; set; }
+        public List<FootballerDto>? Footballers { get; set; }
     }
 }
