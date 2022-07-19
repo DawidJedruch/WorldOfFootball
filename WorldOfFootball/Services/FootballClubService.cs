@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using System.Linq.Expressions;
 using WorldOfFootball.Entities;
 using WorldOfFootball.Exceptions;
 using WorldOfFootball.Models;
@@ -79,6 +80,22 @@ namespace WorldOfFootball.Services
                 .FootballClubs
                 .Where(f => (query.SearchPhrase == null) || (f.Name.ToLower().Contains(query.SearchPhrase.ToLower())
                     || f.Description.ToLower().Contains(query.SearchPhrase.ToLower())));
+
+            if (!string.IsNullOrEmpty(query.SortBy))
+            {
+                var columnsSelectors = new Dictionary<string, Expression<Func<FootballClub, object>>>
+                {
+                    {nameof(FootballClub.Name), f => f.Name},
+                    {nameof(FootballClub.Description), f => f.Description},
+                    {nameof(FootballClub.Nationality), f => f.Nationality},
+                };
+
+                var selectedColumn = columnsSelectors[query.SortBy];
+
+                baseQuery = query.SortDirection == SortDirection.ASC ?
+                    baseQuery.OrderBy(selectedColumn)
+                    : baseQuery.OrderByDescending(selectedColumn);
+            }
 
             var footballClubs = baseQuery
                 .Skip(query.PageSize * (query.PageNumber - 1))
