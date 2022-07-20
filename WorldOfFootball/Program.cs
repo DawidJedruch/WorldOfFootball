@@ -38,10 +38,22 @@ builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 builder.Services.AddScoped<IValidator<RegisterUserDto>, RegisterUserDtoValidator>();
 builder.Services.AddScoped<IValidator<FootballClubQuery>, FootballClubQueryValidator>();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("FrontendClient", policybuilder =>
+
+    policybuilder.AllowAnyMethod()
+        .AllowAnyHeader()
+        .WithOrigins(builder.Configuration["AllowedOrigins"])
+    );
+});
+
 var app = builder.Build();
 
 var scope = app.Services.CreateScope();
 var seeder = scope.ServiceProvider.GetRequiredService<FootballSeeder>();
+
+app.UseCors("FrontendClient");
 
 seeder.Seed();
 

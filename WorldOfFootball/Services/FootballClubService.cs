@@ -92,8 +92,8 @@ namespace WorldOfFootball.Services
 
                 var selectedColumn = columnsSelectors[query.SortBy];
 
-                baseQuery = query.SortDirection == SortDirection.ASC ?
-                    baseQuery.OrderBy(selectedColumn)
+                baseQuery = query.SortDirection == SortDirection.ASC 
+                    ? baseQuery.OrderBy(selectedColumn)
                     : baseQuery.OrderByDescending(selectedColumn);
             }
 
