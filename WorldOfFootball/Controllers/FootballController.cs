@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WorldOfFootball.Entities;
 using WorldOfFootball.Models;
@@ -8,6 +9,7 @@ namespace WorldOfFootball.Controllers
 {
     [Route("api/footballClub")]
     [ApiController]
+    [Authorize]
     public class FootballController : ControllerBase
     {
         private readonly IFootballClubService _footballClubService;
@@ -50,6 +52,7 @@ namespace WorldOfFootball.Controllers
         }
 
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public ActionResult<FootballClubDto> Get([FromRoute] int id)
         {
             var footballClub = _footballClubService.GetById(id);                     
