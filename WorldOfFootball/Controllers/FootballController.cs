@@ -36,8 +36,9 @@ namespace WorldOfFootball.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public ActionResult CreateFootballClub([FromBody]CreateFootballClubDto dto)
-        {           
+        {
             var id = _footballClubService.Create(dto);
 
             return Created($"/api/footballClub/{id}", null);
