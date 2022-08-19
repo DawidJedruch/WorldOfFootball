@@ -49,6 +49,10 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("HasNationality", builder => builder.RequireClaim("Nationality"));
+});
 builder.Services.AddControllers().AddFluentValidation();
 builder.Services.AddDbContext<FootballDbContext>();
 builder.Services.AddScoped<FootballSeeder>();

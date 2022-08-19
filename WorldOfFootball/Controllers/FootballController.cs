@@ -45,6 +45,7 @@ namespace WorldOfFootball.Controllers
         }
 
         [HttpGet]
+        [Authorize(Policy = "HasNationality")]
         public ActionResult<IEnumerable<FootballClubDto>> GetAll([FromQuery]FootballClubQuery query)
         {
             var footballClubDtos = _footballClubService.GetAll(query);
