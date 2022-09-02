@@ -10,7 +10,7 @@ namespace WorldOfFootball.Services
     {
         FootballClubDto GetById(int id);
         PageResult<FootballClubDto> GetAll(FootballClubQuery query);
-        int Create(CreateFootballClubDto dto);
+        int Create(CreateFootballClubDto dto, int userId);
         void Delete(int id);
         void Update(int id, UpdateFootballClubDto dto);
     }
@@ -111,9 +111,10 @@ namespace WorldOfFootball.Services
             return result;
         }
 
-        public int Create(CreateFootballClubDto dto)
+        public int Create(CreateFootballClubDto dto, int userId)
         {
             var footballClub = _mapper.Map<FootballClub>(dto);
+            footballClub.CreatedById = userId;
             _dbContext.FootballClubs.Add(footballClub);
             _dbContext.SaveChanges();
 

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using WorldOfFootball.Entities;
 using WorldOfFootball.Models;
 using WorldOfFootball.Services;
@@ -39,7 +40,8 @@ namespace WorldOfFootball.Controllers
         [Authorize(Roles = "Admin")]
         public ActionResult CreateFootballClub([FromBody]CreateFootballClubDto dto)
         {
-            var id = _footballClubService.Create(dto);
+            var userId = int.Parse(User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value);
+            var id = _footballClubService.Create(dto, userId);
 
             return Created($"/api/footballClub/{id}", null);
         }
