@@ -1,5 +1,8 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using System.Linq.Expressions;
+using System.Security.Claims;
+using WorldOfFootball.Authorization;
 using WorldOfFootball.Entities;
 using WorldOfFootball.Exceptions;
 using WorldOfFootball.Models;
@@ -12,7 +15,7 @@ namespace WorldOfFootball.Services
         PageResult<FootballClubDto> GetAll(FootballClubQuery query);
         int Create(CreateFootballClubDto dto, int userId);
         void Delete(int id);
-        void Update(int id, UpdateFootballClubDto dto);
+        void Update(int id, UpdateFootballClubDto dto, ClaimsPrincipal user);
     }
 
     public class FootballClubService : IFootballClubService
@@ -20,22 +23,32 @@ namespace WorldOfFootball.Services
         private readonly FootballDbContext _dbContext;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
+        private readonly IAuthorizationService _authorizationService;
 
-        public FootballClubService(FootballDbContext dbContext, IMapper mapper, ILogger<FootballClubService> logger)
+        public FootballClubService(FootballDbContext dbContext, IMapper mapper, ILogger<FootballClubService> logger, IAuthorizationService authorizationService)
         {
             _dbContext = dbContext;
             _mapper = mapper;
             _logger = logger;
+            _authorizationService = authorizationService;
         }
 
-        public void Update(int id, UpdateFootballClubDto dto)
-        {
+        public void Update(int id, UpdateFootballClubDto dto, ClaimsPrincipal user)
+        {         
             var footballClub = _dbContext
                 .FootballClubs
                 .FirstOrDefault(r => r.Id == id);
 
             if (footballClub is null)
                 throw new NotFoundException("FootballClub not found.");
+
+            var authorizationResult = _authorizationService.AuthorizeAsync(user, footballClub,
+                new ResourceOperationRequirement(ResourceOperation.Update)).Result;
+
+            if (!authorizationResult.Succeeded)
+            {
+                throw new ForbidException();
+            }
 
             footballClub.Name = dto.Name;
             footballClub.StadiumName = dto.StadiumName;
