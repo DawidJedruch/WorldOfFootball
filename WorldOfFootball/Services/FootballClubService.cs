@@ -14,7 +14,7 @@ namespace WorldOfFootball.Services
         FootballClubDto GetById(int id);
         PageResult<FootballClubDto> GetAll(FootballClubQuery query);
         int Create(CreateFootballClubDto dto, int userId);
-        void Delete(int id);
+        void Delete(int id, ClaimsPrincipal user);
         void Update(int id, UpdateFootballClubDto dto, ClaimsPrincipal user);
     }
 
@@ -59,7 +59,7 @@ namespace WorldOfFootball.Services
             _dbContext.SaveChanges();
         }
 
-        public void Delete(int id)
+        public void Delete(int id, ClaimsPrincipal user)
         {
             _logger.LogError($"FootballClub with id: {id} DELETE action invoked.");
 
@@ -69,6 +69,14 @@ namespace WorldOfFootball.Services
 
             if (footballClub is null)
                 throw new NotFoundException("Football Club not found.");
+
+            var authorizationResult = _authorizationService.AuthorizeAsync(user, footballClub,
+                new ResourceOperationRequirement(ResourceOperation.Delete)).Result;
+
+            if (!authorizationResult.Succeeded)
+            {
+                throw new ForbidException();
+            }
 
             _dbContext.FootballClubs.Remove(footballClub);
             _dbContext.SaveChanges();

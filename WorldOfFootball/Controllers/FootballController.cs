@@ -23,7 +23,7 @@ namespace WorldOfFootball.Controllers
         [HttpPut("{id}")]
         public ActionResult Update([FromBody] UpdateFootballClubDto dto, [FromRoute]int id)
         {
-            _footballClubService.Update(id, dto);
+            _footballClubService.Update(id, dto, User);
 
             return Ok();
         }
@@ -31,7 +31,7 @@ namespace WorldOfFootball.Controllers
         [HttpDelete("{id}")]
         public ActionResult Delete([FromRoute] int id)
         {
-            _footballClubService.Delete(id);
+            _footballClubService.Delete(id, User);
 
             return NoContent();
         }
